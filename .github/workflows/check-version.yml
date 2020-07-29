@@ -1,0 +1,42 @@
+name: Check latest uuu version
+on:
+  schedule:
+    - cron:  '35 22 * * *'
+jobs:
+  get-version:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check version
+        run: |
+          LATEST_UUU_RELEASE=$(curl --silent "https://api.github.com/repos/NXPMicro/mfgtools/releases/latest")
+          LATEST_UUU_RELEASE_RELEASE_NAME=$($LATEST_UUU_RELEASE |
+          grep '"name":' |
+          sed -E 's/.*"([^"]+)".*/\1/')
+          LATEST_UUU_RELEASE_TAG_NAME=$($LATEST_UUU_RELEASE |
+          grep '"tag_name":' |
+          sed -E 's/.*"([^"]+)".*/\1/')
+
+          LATEST_DOCKER_UUU_RELEASE=$(curl --silent "https://api.github.com/repos/nosidewen/docker-uuu/releases/latest")
+          LATEST_DOCKER_UUU_RELEASE_RELEASE_NAME=$($LATEST_DOCKER_UUU_RELEASE |
+          grep '"name":' |
+          sed -E 's/.*"([^"]+)".*/\1/')
+          LATEST_DOCKER_UUU_RELEASE_TAG_NAME=$($LATEST_DOCKER_UUU_RELEASE |
+          grep '"tag_name":' |
+          sed -E 's/.*"([^"]+)".*/\1/')
+
+          echo "LATEST_UUU_RELEASE_NAME: $LATEST_UUU_RELEASE_NAME"
+          echo "LATEST_UUU_RELEASE_TAG_NAME: $LATEST_UUU_RELEASE_TAG_NAME"
+
+          echo "LATEST_DOCKER_UUU_RELEASE_NAME: $LATEST_DOCKER_UUU_RELEASE_NAME"
+          echo "LATEST_DOCKER_UUU_RELEASE_TAG_NAME: $LATEST_DOCKER_UUU_RELEASE_TAG_NAME"
+
+          if [ "$LATEST_UUU_RELEASE_TAG_NAME" = "$LATEST_DOCKER_UUU_RELEASE_TAG_NAME" ]; then
+            echo "No new uuu version found in NXPMicro/mfgtools."
+          else
+            echo "New uuu version found in NXPMicro/mfgtools."
+            echo "Trigger repository_dispatch: latest-uuu-version in nosidewen/docker-uuu"
+            curl -H 'Authorization: Bearer ${{ secrets.GITHUB_TOKEN }}' \
+                 -H 'Accept: application/vnd.github.everest-preview+json' \
+                  "https://api.github.com/repos/nosidewen/docker-uuu/dispatches" \
+                  -d '{"event_type": "latest-uuu-version", "client_payload": {"tag_name": "$LATEST_UUU_RELEASE_TAG_NAME", "name": "$LATEST_UUU_RELEASE_NAME"}}'
+          fi
