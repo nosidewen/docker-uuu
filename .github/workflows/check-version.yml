@@ -1,7 +1,7 @@
 name: Check latest uuu version
 on:
   schedule:
-    - cron:  '05 22 * * *'
+    - cron:  '35 22 * * *'
 jobs:
   get-version:
     runs-on: ubuntu-latest
