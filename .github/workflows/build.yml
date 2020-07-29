@@ -26,7 +26,7 @@ jobs:
           DOCKER_PLATFORMS=linux/amd64,linux/arm/v7,linux/arm64/v8
           VERSION=latest
           RELEASE_NAME=''
-          if [ github.event.client_payload.tag_name != '' ]; then
+          if [ -z "${{ github.event.client_payload }}" ]; then
             VERSION=${{ github.event.client_payload.tag_name }}
             RELEASE_NAME=${{ github.event.client_payload.name }}
           fi
