@@ -43,7 +43,9 @@ WORKDIR  /docker-uuu/mfgtools
 #  release, then build it.
 # https://docs.docker.com/develop/develop-images/dockerfile_best-practices/#add-or-copy
 # https://gist.github.com/steinwaywhw/a4cd19cda655b8249d908261a62687f8#gistcomment-3199552
-RUN curl -s https://api.github.com/repos/NXPMicro/mfgtools/releases/latest \
+RUN if [ -z "$VERSION" ] || [ "$VERSION" = "latest" ]; then URL="https://api.github.com/repos/NXPMicro/mfgtools/releases/latest"; else URL="https://api.github.com/repos/NXPMicro/mfgtools/releases/tags/$VERSION"; fi \
+    && echo $URL \
+    && curl -s "$URL" \
     # grep for line that starts 'browser_download_url' and ends 'tar.gz'
     | grep 'browser_download_url.*tar.gz"' \
     # cut string based on ':' and take fields 2,3
