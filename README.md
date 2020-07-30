@@ -3,7 +3,7 @@ Docker image containing latest released pre-built binary of [NXP's uuu (mfgtool 
 
 [![build](https://github.com/nosidewen/docker-uuu/workflows/build/badge.svg)](https://github.com/nosidewen/docker-uuu/actions?query=workflow%3Abuild)
 
-The image is built daily for multiple platforms (linux/amd64, linux/arm/v7, linux/arm64) and published to Docker Hub at [allenorro/uuu](https://hub.docker.com/r/allenorro/uuu) via a GitHub Action.
+A GitHub Action checks daily if there is a new Release posted to `NXPmicro/mfgtools`, and if so, a Docker image is built for multiple platforms (linux/amd64, linux/arm/v7, linux/arm64) and published to Docker Hub at [allenorro/uuu](https://hub.docker.com/r/allenorro/uuu).
 
 _Credit: Overall design of Dockerfile and GitHub Action inspired by [crazy-max/docker-7zip](https://github.com/crazy-max/docker-7zip)._
 
