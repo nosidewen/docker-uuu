@@ -47,7 +47,7 @@ vboxmanage modifyvm virtualbox-docker-host --usb on
 vboxmanage modifyvm virtualbox-docker-host --usbehci on
 
 # Setup VB USB filters so all the i.MX devices used during flashing automatically get attached to the Virtualbox VM 
-# You will need to provide your chip/board specific vendorIds and productIds here if they are different
+# NOTE: You will need to provide all the different chip/board specific USB vendorIds and productIds used during flashing process
 vboxmanage usbfilter add 0 --target virtualbox-docker-host --name freescale-vendor --vendorid 0x15a2
 vboxmanage usbfilter add 0 --target virtualbox-docker-host --name sigmatel-fsl-imx-board --vendorid 0x066f --productid 0x9bff
 
@@ -56,9 +56,10 @@ docker-machine start virtualbox-docker-host
 
 # Use docker-machine scp to copy release files from local machine to your new Docker Machine Host so these files can later be mounted into container
 # https://docs.docker.com/machine/reference/scp/
+# NOTE: You will need to provide the location of your release files to copy
 docker-machine scp -r [YOUR_RELEASE_FILES_DIR] virtualbox-docker-host:/tmp/vm-release-files/
 
-# set newly-created docker-machine as "active" for docker cli
+# set the newly-created docker-machine "virtualbox-docker-host" as "active" for the docker cli to use as host during this shell session
 eval $(docker-machine env virtualbox-docker-host)
 
 # run container with UUU command
@@ -69,10 +70,10 @@ docker run -it --rm \
   -v /run/udev/control:/run/udev/control:ro \
   -v /tmp/vm-release-files/:/uuu-release-files \
   allenorro/uuu uuu [uuu command (default: -h)]
-  
+
 OR
 
-# run container to start /bin/bash
+# run container with /bin/bash
 docker run -it --rm \
   --net=host \
   --device-cgroup-rule='c 189:* rmw' \
