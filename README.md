@@ -54,7 +54,7 @@ vboxmanage usbfilter add 0 --target virtualbox-docker-host --name sigmatel-fsl-i
 # Start the VM back up
 docker-machine start virtualbox-docker-host
 
-# Use docker-machine scp to copy release files from local machine to Docker host so these files can be mounted into container
+# Use docker-machine scp to copy release files from local machine to your new Docker Machine Host so these files can later be mounted into container
 # https://docs.docker.com/machine/reference/scp/
 docker-machine scp -r [YOUR_RELEASE_FILES_DIR] virtualbox-docker-host:/tmp/vm-release-files/
 
