@@ -61,6 +61,7 @@ docker-machine scp -r [YOUR_RELEASE_FILES_DIR] virtualbox-docker-host:/tmp/vm-re
 # set newly-created docker-machine as "active" for docker cli
 eval $(docker-machine env virtualbox-docker-host)
 
+# run container with UUU command
 docker run -it --rm \
   --net=host \
   --device-cgroup-rule='c 189:* rmw' \
@@ -68,6 +69,17 @@ docker run -it --rm \
   -v /run/udev/control:/run/udev/control:ro \
   -v /tmp/vm-release-files/:/uuu-release-files \
   allenorro/uuu uuu [uuu command (default: -h)]
+  
+OR
+
+# run container to start /bin/bash
+docker run -it --rm \
+  --net=host \
+  --device-cgroup-rule='c 189:* rmw' \
+  -v /dev/bus/usb:/dev/bus/usb:ro \
+  -v /run/udev/control:/run/udev/control:ro \
+  -v /tmp/vm-release-files/:/uuu-release-files \
+  allenorro/uuu /bin/bash
 ```
 
 Sources for using docker-machine:
