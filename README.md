@@ -56,6 +56,9 @@ docker-machine start virtualbox-docker-host
 # Copy release files from local machine to Docker host
 docker-machine scp ${RELEASE_FILES} virtualbox-docker-host:/tmp/uuu-release/
 
+# set newly-created docker-machine as "active" for docker cli
+eval $(docker-machine env virtualbox-docker-host)
+
 docker run -it --rm \
   --net=host \
   --device-cgroup-rule='c 189:* rmw' \
