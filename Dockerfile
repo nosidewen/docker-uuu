@@ -28,12 +28,18 @@ LABEL maintainer="nosidewen" \
 # https://github.com/NXPmicro/mfgtools
 RUN apt-get update && apt-get install -y \
     curl \
+    wget \
     libusb-1.0-0-dev \
     libzip-dev \
     libbz2-dev \
     pkg-config \
-    cmake \
     libssl-dev
+
+# Install CMake 3.13.5
+RUN wget "https://cmake.org/files/v3.13/cmake-3.13.5-Linux-x86_64.sh" \
+&& chmod a+x cmake-3.13.5-Linux-x86_64.sh \
+&& ./cmake-3.13.5-Linux-x86_64.sh --prefix=/usr/local/ --skip-license \
+&& rm cmake-3.13.5-Linux-x86_64.sh
 
 WORKDIR  /docker-uuu/mfgtools
 
